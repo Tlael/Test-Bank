@@ -1,149 +1,55 @@
-import requests
 import pytest
+
+from main.api.models.create_user_request import CreateUserRequest
+from main.api.models.deposit_account_request import DepositAccountRequest
+from main.api.requests.create_account_requester import CreateAccountRequester
+from main.api.requests.create_user_requester import CreateUserRequester
+from main.api.requests.deposit_account_requester import DepositAccountRequester
+from main.api.specs.request_specs import RequestSpecs
+from main.api.specs.response_specs import ResponseSpecs
 
 
 @pytest.mark.api
 class TestDepositAccount:
     def test_deposit_account_valid(self):
-        login_admin_response = requests.post(
-            url="http://localhost:4111/api/auth/token/login",
-            json={
-                "username": "admin",
-                "password": "123456"
-            },
-            headers={
-                "Content-Type": "application/json",
-                "accept": "application/json"
-            }
-        )
+        create_user_request = CreateUserRequest(username="Vika1577", password="Pas!sw0rd", role="ROLE_USER")
 
-        assert login_admin_response.status_code == 200
-        token = login_admin_response.json().get("token")
+        CreateUserRequester(
+            request_spec = RequestSpecs.auth_headers(username="admin", password="123456"),
+            response_spec = ResponseSpecs.request_ok()
 
-        create_user_response = requests.post(
-            url="http://localhost:4111/api/admin/create",
-            json={
-                "username": "Vika111",
-                "password": "Pas!sw0rd",
-                "role": "ROLE_USER"
-            },
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {token}"}
-        )
+        ).post(create_user_request)
 
-        assert create_user_response.status_code == 200
+        account_response = CreateAccountRequester(
+            request_spec = RequestSpecs.auth_headers(username="Vika1577", password="Pas!sw0rd"),
+            response_spec = ResponseSpecs.request_create()
+        ).post()
 
-        login_user_response = requests.post(
-            url="http://localhost:4111/api/auth/token/login",
-            json={
-                "username": "Vika111",
-                "password": "Pas!sw0rd",
-            },
-            headers={
-                "Content-Type": "application/json",
-                "accept": "application/json"
-            }
-        )
+        deposit_account_request = DepositAccountRequest(accountId=account_response.id, amount=1000)
+        response = DepositAccountRequester(
+            request_spec = RequestSpecs.auth_headers(username="Vika1577", password="Pas!sw0rd"),
+            response_spec = ResponseSpecs.request_ok()
+        ).post(deposit_account_request)
 
-        assert login_user_response.status_code == 200
-        token = login_user_response.json().get("token")
-
-        create_account_response = requests.post(
-            url="http://localhost:4111/api/account/create",
-            headers={
-                "accept": "application/json",
-                "Authorization": f"Bearer {token}"
-            }
-        )
-
-        assert create_account_response.status_code == 201
-        account_id = create_account_response.json().get("id")
-
-        deposit_account_response = requests.post(
-            url="http://localhost:4111/api/account/deposit",
-            json={
-                "accountId": account_id,
-                "amount": 1000
-            },
-            headers={
-                "accept": "application/json",
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
-            }
-        )
-
-        assert deposit_account_response.status_code == 200
-        assert deposit_account_response.json().get("id") == account_id
+        assert response.id == account_response.id
+        assert response.balance == 1000
 
     def test_deposit_account_invalid(self):
-        login_admin_response = requests.post(
-            url="http://localhost:4111/api/auth/token/login",
-            json={
-                "username": "admin",
-                "password": "123456"
-            },
-            headers={
-                "Content-Type": "application/json",
-                "accept": "application/json"
-            }
-        )
+        create_user_request = CreateUserRequest(username="Vika1578", password="Pas!sw0rd", role="ROLE_USER")
 
-        assert login_admin_response.status_code == 200
-        token = login_admin_response.json().get("token")
+        CreateUserRequester(
+            request_spec=RequestSpecs.auth_headers(username="admin", password="123456"),
+            response_spec=ResponseSpecs.request_ok()
 
-        create_user_response = requests.post(
-            url="http://localhost:4111/api/admin/create",
-            json={
-                "username": "Vika106",
-                "password": "Pas!sw0rd",
-                "role": "ROLE_USER"
-            },
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {token}"}
-        )
+        ).post(create_user_request)
 
-        assert create_user_response.status_code == 200
+        account_response = CreateAccountRequester(
+            request_spec=RequestSpecs.auth_headers(username="Vika1578", password="Pas!sw0rd"),
+            response_spec=ResponseSpecs.request_create()
+        ).post()
 
-        login_user_response = requests.post(
-            url="http://localhost:4111/api/auth/token/login",
-            json={
-                "username": "Vika106",
-                "password": "Pas!sw0rd",
-            },
-            headers={
-                "Content-Type": "application/json",
-                "accept": "application/json"
-            }
-        )
-
-        assert login_user_response.status_code == 200
-        token = login_user_response.json().get("token")
-
-        create_account_response = requests.post(
-            url="http://localhost:4111/api/account/create",
-            headers={
-                "accept": "application/json",
-                "Authorization": f"Bearer {token}"
-            }
-        )
-
-        assert create_account_response.status_code == 201
-        account_id = create_account_response.json().get("id")
-
-        deposit_account_response = requests.post(
-            url="http://localhost:4111/api/account/deposit",
-            json={
-                "accountId": account_id,
-                "amount": 999
-            },
-            headers={
-                "accept": "application/json",
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json"
-            }
-        )
-
-        assert deposit_account_response.status_code == 400
-        assert deposit_account_response.json().get("error") == "Account accountId is required\nAmount must be between 1000 and 9000"
+        deposit_account_request = DepositAccountRequest(accountId=account_response.id, amount=999)
+        DepositAccountRequester(
+            request_spec = RequestSpecs.auth_headers(username="Vika1578", password="Pas!sw0rd"),
+            response_spec = ResponseSpecs.request_bad()
+        ).post(deposit_account_request)
