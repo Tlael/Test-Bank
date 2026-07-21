@@ -3,7 +3,7 @@ from http import HTTPStatus
 import requests
 from requests import Response
 
-from main.api.models.credir_request_response import CreditRequestResponse
+from main.api.models.credit_request_response import CreditRequestResponse
 from main.api.models.credit_request_request import CreditRequestRequest
 from main.api.requests.requester import Requester
 
