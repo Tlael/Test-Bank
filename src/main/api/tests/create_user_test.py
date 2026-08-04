@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.orm import Session
 
-from main.api.classes.api_manager import ApiManager
+from src.main.api.classes.api_manager import ApiManager
 from src.main.api.generators.model_generator import RandomModelGenerator
 from src.main.api.models.create_user_request import CreateUserRequest
 from src.main.api.db.crud.user_crud import UserCrudDb as User
