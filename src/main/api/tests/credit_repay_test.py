@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from src.main.api.fixtures.api_fixture import api_manager
 from src.main.api.models.credit_repay_request import CreditRepayRequest
@@ -7,7 +8,14 @@ from src.main.api.models.credit_request_request import CreditRequestRequest
 
 @pytest.mark.api
 class TestCreditRepay:
-    @pytest.mark.xfail
+    @pytest.mark.xfail(
+        reason=(
+                "Blocked by known /credit/request contract defect: API returns 'id' "
+                "instead of Swagger field 'accountId'"
+        ),
+        raises=ValidationError,
+        strict=True,
+    )
     def test_credit_repay_valid(self, api_manager, create_credit_user_request):
         account_response = api_manager.user_steps.create_account(create_credit_user_request)
 
@@ -30,7 +38,14 @@ class TestCreditRepay:
         assert response.amountDeposited == credit_repay_request.amount
         assert response.creditId == credit_response.creditId
 
-    @pytest.mark.xfail
+    @pytest.mark.xfail(
+        reason=(
+                "Blocked by known /credit/request contract defect: API returns 'id' "
+                "instead of Swagger field 'accountId'"
+        ),
+        raises=ValidationError,
+        strict=True,
+    )
     def test_credit_repay_invalid(self, api_manager, create_credit_user_request):
         account_response = api_manager.user_steps.create_account(create_credit_user_request)
 

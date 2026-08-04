@@ -6,7 +6,7 @@ class ResponseSpecs:
     @staticmethod
     def request_ok():
         def confirm(response: Response):
-            return response.status_code == HTTPStatus.OK, response.text
+            assert response.status_code == HTTPStatus.OK, response.text
 
         return confirm
 
