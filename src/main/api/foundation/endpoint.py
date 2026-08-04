@@ -2,20 +2,20 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Type
 
-from main.api.models.base_model import BaseModel
-from main.api.models.create_account_response import CreateAccountResponse
-from main.api.models.create_user_request import CreateUserRequest
-from main.api.models.create_user_response import CreateUserResponse
-from main.api.models.credit_repay_request import CreditRepayRequest
-from main.api.models.credit_repay_response import CreditRepayResponse
-from main.api.models.credit_request_request import CreditRequestRequest
-from main.api.models.credit_request_response import CreditRequestResponse
-from main.api.models.deposit_account_request import DepositAccountRequest
-from main.api.models.deposit_account_response import DepositAccountResponse
-from main.api.models.login_user_request import LoginUserRequest
-from main.api.models.login_user_response import LoginUserResponse
-from main.api.models.transfer_account_request import TransferAccountRequest
-from main.api.models.transfer_account_response import TransferAccountResponse
+from src.main.api.models.base_model import BaseModel
+from src.main.api.models.create_account_response import CreateAccountResponse
+from src.main.api.models.create_user_request import CreateUserRequest
+from src.main.api.models.create_user_response import CreateUserResponse
+from src.main.api.models.credit_repay_request import CreditRepayRequest
+from src.main.api.models.credit_repay_response import CreditRepayResponse
+from src.main.api.models.credit_request_request import CreditRequestRequest
+from src.main.api.models.credit_request_response import CreditRequestResponse
+from src.main.api.models.deposit_account_request import DepositAccountRequest
+from src.main.api.models.deposit_account_response import DepositAccountResponse
+from src.main.api.models.login_user_request import LoginUserRequest
+from src.main.api.models.login_user_response import LoginUserResponse
+from src.main.api.models.transfer_account_request import TransferAccountRequest
+from src.main.api.models.transfer_account_response import TransferAccountResponse
 
 
 @dataclass

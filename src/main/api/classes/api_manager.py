@@ -1,7 +1,7 @@
 from typing import List, Any
 
-from main.api.steps.admin_steps import AdminSteps
-from main.api.steps.user_steps import UserSteps
+from src.main.api.steps.admin_steps import AdminSteps
+from src.main.api.steps.user_steps import UserSteps
 
 
 class ApiManager:

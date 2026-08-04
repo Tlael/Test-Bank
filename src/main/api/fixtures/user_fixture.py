@@ -1,11 +1,9 @@
-from urllib import response
-
 import pytest
 
-from main.api.generators.model_generator import RandomModelGenerator
-from main.api.models.create_credit_user_request import CreateCreditUserRequest
-from main.api.models.create_user_request import CreateUserRequest
-from main.api.models.deposit_account_request import DepositAccountRequest
+from src.main.api.generators.model_generator import RandomModelGenerator
+from src.main.api.models.create_credit_user_request import CreateCreditUserRequest
+from src.main.api.models.create_user_request import CreateUserRequest
+from src.main.api.models.deposit_account_request import DepositAccountRequest
 
 
 @pytest.fixture

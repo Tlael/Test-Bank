@@ -1,6 +1,6 @@
 import pytest
 
-from main.api.models.deposit_account_request import DepositAccountRequest
+from src.main.api.models.deposit_account_request import DepositAccountRequest
 
 
 @pytest.mark.api

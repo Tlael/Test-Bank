@@ -4,7 +4,7 @@ from typing import Any, get_type_hints, Annotated, get_origin, get_args
 
 import rstr
 
-from main.api.generators.creation_rule import CreationRule
+from src.main.api.generators.creation_rule import CreationRule
 
 
 class RandomModelGenerator:

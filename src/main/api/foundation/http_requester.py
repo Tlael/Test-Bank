@@ -1,6 +1,6 @@
 from typing import Callable, Dict
 
-from main.api.foundation.endpoint import Endpoint
+from src.main.api.foundation.endpoint import Endpoint
 
 
 class HttpRequester:

@@ -1,6 +1,6 @@
 import pytest
 
-from main.api.models.credit_request_request import CreditRequestRequest
+from src.main.api.models.credit_request_request import CreditRequestRequest
 
 
 @pytest.mark.api

@@ -1,8 +1,8 @@
 import pytest
 
-from main.api.fixtures.api_fixture import api_manager
-from main.api.models.credit_repay_request import CreditRepayRequest
-from main.api.models.credit_request_request import CreditRequestRequest
+from src.main.api.fixtures.api_fixture import api_manager
+from src.main.api.models.credit_repay_request import CreditRepayRequest
+from src.main.api.models.credit_request_request import CreditRequestRequest
 
 
 @pytest.mark.api
