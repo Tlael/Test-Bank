@@ -1,9 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from src.main.api.fixtures.api_fixture import api_manager
 from src.main.api.models.credit_repay_request import CreditRepayRequest
-from src.main.api.models.credit_request_request import CreditRequestRequest
+from src.main.api.classes.api_manager import ApiManager
+from src.main.api.models.create_credit_user_request import CreateCreditUserRequest
 
 
 @pytest.mark.api
@@ -16,27 +16,19 @@ class TestCreditRepay:
         raises=ValidationError,
         strict=True,
     )
-    def test_credit_repay_valid(self, api_manager, create_credit_user_request):
-        account_response = api_manager.user_steps.create_account(create_credit_user_request)
+    def test_credit_repay_valid(self, api_manager: ApiManager, create_credit_user_request: CreateCreditUserRequest,
+                                valid_credit_repay_request: CreditRepayRequest) -> None:
+        response = api_manager.user_steps.credit_repay_request(create_credit_user_request, valid_credit_repay_request)
 
-        credit_request = CreditRequestRequest(
-            accountId=account_response.id,
-            amount=5000,
-            termMonths=12
+        assert response.amountDeposited == valid_credit_repay_request.amount, (
+            f"Ожидали сумму погашения {valid_credit_repay_request.amount}, "
+            f"получили {response.amountDeposited}"
         )
 
-        credit_response = api_manager.user_steps.credit_request(create_credit_user_request, credit_request)
-
-        credit_repay_request = CreditRepayRequest(
-            creditId=credit_response.creditId,
-            accountId=account_response.id,
-            amount=5000
+        assert response.creditId == valid_credit_repay_request.creditId, (
+            f"Ожидали ID кредита {valid_credit_repay_request.creditId}, "
+            f"получили {response.creditId}"
         )
-
-        response = api_manager.user_steps.credit_repay_request(create_credit_user_request, credit_repay_request)
-
-        assert response.amountDeposited == credit_repay_request.amount
-        assert response.creditId == credit_response.creditId
 
     @pytest.mark.xfail(
         reason=(
@@ -46,21 +38,6 @@ class TestCreditRepay:
         raises=ValidationError,
         strict=True,
     )
-    def test_credit_repay_invalid(self, api_manager, create_credit_user_request):
-        account_response = api_manager.user_steps.create_account(create_credit_user_request)
-
-        credit_request = CreditRequestRequest(
-            accountId=account_response.id,
-            amount=5000,
-            termMonths=12
-        )
-
-        credit_response = api_manager.user_steps.credit_request(create_credit_user_request, credit_request)
-
-        credit_repay_request = CreditRepayRequest(
-            creditId=credit_response.creditId,
-            accountId=account_response.id,
-            amount=1000000
-        )
-
-        api_manager.user_steps.credit_invalid_repay(create_credit_user_request, credit_repay_request)
+    def test_credit_repay_invalid(self, api_manager: ApiManager, create_credit_user_request: CreateCreditUserRequest,
+                                  invalid_credit_repay_request: CreditRepayRequest) -> None:
+        api_manager.user_steps.credit_invalid_repay(create_credit_user_request, invalid_credit_repay_request)
